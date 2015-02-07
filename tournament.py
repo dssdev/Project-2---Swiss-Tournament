@@ -71,9 +71,9 @@ def playerStandings():
                           name,
                           sum(case WHEN pid=winner THEN 1
                                    ELSE 0
-                                   END),
+                                   END) as wins,
                           count(winner)
-                   from player left join match on pid=winner or pid=loser group by pid;""")
+                   from player left join match on pid=winner or pid=loser group by pid order by wins desc;""")
     standings = [(row[0],row[1],int(row[2]),int(row[3])) for row in cur.fetchall()]
     print(standings)
     conn.commit()
