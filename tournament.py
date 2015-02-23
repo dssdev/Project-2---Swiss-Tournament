@@ -67,6 +67,7 @@ def playerStandings():
     """
     conn = connect()
     cur = conn.cursor()
+    #Get the player id, name, # of wins and total matches with the most wins at the top. 
     cur.execute("""select pid,
                           name,
                           sum(case WHEN pid=winner THEN 1
@@ -74,6 +75,7 @@ def playerStandings():
                                    END) as wins,
                           count(winner)
                    from player left join match on pid=winner or pid=loser group by pid order by wins desc;""")
+    #Get the values from the query and put them in a list                
     standings = [(row[0],row[1],int(row[2]),int(row[3])) for row in cur.fetchall()]
     print(standings)
     conn.commit()
@@ -109,6 +111,7 @@ def swissPairings():
     """
     conn = connect()
     cur = conn.cursor()
+    #Get the player id, name and # of wins with the most wins at the top. 
     cur.execute("""select pid,
                           name,
                           sum(case WHEN pid=winner THEN 1
@@ -119,6 +122,7 @@ def swissPairings():
     count = 1
     player1 = ()
     player2 = ()
+    #If the count is even, we have two players so we can make a pair, if not, track it as player 1 
     for row in cur.fetchall():
         if count%2 != 0:
             player1 = (row[0],row[1])
